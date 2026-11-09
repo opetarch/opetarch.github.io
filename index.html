@@ -282,9 +282,7 @@ footer b{display:block;color:var(--blue);font-family:var(--f-mono);font-size:.68
     <div class="titleblock" aria-label="Featured project">
       <div class="full"><span class="mono">Featured project</span><strong>1350 Templeton Avenue</strong></div>
       <div><span class="mono">Location</span>Winnipeg, MB</div>
-      <div><span class="mono">Program</span>100 condo units + CRU</div>
-      <div><span class="mono">Gross floor area</span>142,600 sq. ft.</div>
-      <div><span class="mono">Budget</span>C$10M</div>
+      <div><span class="mono">Program</span>Mixed-use residential</div>
     </div>
   </div>
 
@@ -338,7 +336,7 @@ footer b{display:block;color:var(--blue);font-family:var(--f-mono);font-size:.68
       <h1>Projects</h1>
       <div class="sheet-no">Sheet<b>A-101</b>Selected work, 2013 to 2026</div>
     </div>
-    <p class="lede" style="padding-top:24px">Work from Winnipeg, Cairo, Shenzhen, Doha and beyond. All images are shown with credit to the original architect of record.</p>
+    <p class="lede" style="padding-top:24px">Work from Winnipeg, Cairo, Shenzhen, Doha and beyond. Projects shown include work our team completed at previous firms, each credited to its architect of record.</p>
     <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
     <div class="pgrid" id="pgrid"></div>
 
@@ -428,46 +426,46 @@ footer b{display:block;color:var(--blue);font-family:var(--f-mono);font-size:.68
 
 <script>
 const P = [
- {id:"templeton",t:"1350 Templeton Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["templeton2","templeton1"],
+ {id:"templeton",aor:"Affinity Architecture Inc.",t:"1350 Templeton Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["templeton2","templeton1"],
   d:"A six-storey residential building with commercial units at grade. Brick-red balcony bays break up a long frontage and give each unit a visible outdoor room.",
-  facts:[["Program","100 condo units + CRU"],["Area","142,600 sq. ft. GFA"],["Budget","C$10M"]]},
- {id:"river",t:"586 to 588 River Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["river1","river2"],
+  facts:[["Program","Mixed-use residential with retail at grade"]]},
+ {id:"river",aor:"Affinity Architecture Inc.",t:"586 to 588 River Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["river1","river2"],
   d:"Infill residential building. A glazed curved corner marks the entrance and turns the building toward the street.",
   facts:[["Program","Multi-family residential"]]},
- {id:"sikh",t:"Sikh Place of Worship",loc:"2762 King Edward St, Winnipeg",yr:2022,cat:"Institutional",region:"Canada",imgs:["sikh"],
+ {id:"sikh",aor:"Affinity Architecture Inc.",t:"Sikh Place of Worship",loc:"2762 King Edward St, Winnipeg",yr:2022,cat:"Institutional",region:"Canada",imgs:["sikh"],
   d:"A gurdwara with shrine, prayer hall, dining hall and residential suites. GFRC domes and decorative panels carry the building's identity on a noncombustible frame.",
   facts:[["Occupancy","Assembly (A-2), with C suites"],["Occupant load","1,350"],["Construction","Noncombustible"]]},
- {id:"court",t:"1245 and 1255 Court Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["court"],
+ {id:"court",aor:"Affinity Architecture Inc.",t:"1245 and 1255 Court Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["court"],
   d:"Residential concept with a landscaped frontage, explored in several facade options.",
   facts:[["Program","Residential"]]},
- {id:"portage",t:"2140 Portage Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["portage1","portage2"],
+ {id:"portage",aor:"Affinity Architecture Inc.",t:"2140 Portage Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["portage1","portage2"],
   d:"A mid-rise apartment building on Portage Avenue, carried through to the 99% owner review set.",
   facts:[["Program","Multi-family residential"]]},
- {id:"wardlaw",t:"349 Wardlaw Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["wardlaw1","wardlaw3"],
+ {id:"wardlaw",aor:"Affinity Architecture Inc.",t:"349 Wardlaw Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["wardlaw1","wardlaw3"],
   d:"Four-storey infill apartment building in a mature neighbourhood, issued for construction in 2022.",
   facts:[["Program","Multi-family residential"]]},
- {id:"seasons",t:"Seasons of Tuxedo, Lots 20 to 25",loc:"Winnipeg, MB",yr:2022,cat:"Planning",region:"Canada",imgs:["seasons2","seasons1"],
+ {id:"seasons",aor:"Affinity Architecture Inc.",t:"Seasons of Tuxedo, Lots 20 to 25",loc:"Winnipeg, MB",yr:2022,cat:"Planning",region:"Canada",imgs:["seasons2","seasons1"],
   d:"Site layout and massing options for several multi-family lots in a large mixed-use development.",
   facts:[["Program","Multi-family, site planning"]]},
- {id:"kings",t:"The King's School",loc:"Winnipeg, MB",yr:2022,cat:"Institutional",region:"Canada",imgs:["kingsschool"],
+ {id:"kings",aor:"Affinity Architecture Inc.",t:"The King's School",loc:"Winnipeg, MB",yr:2022,cat:"Institutional",region:"Canada",imgs:["kingsschool"],
   d:"Exterior rendering of a new school building.",
   facts:[["Program","Education"]]},
- {id:"fortune",t:"Fortune Resort",loc:"Ngapali Beach, Myanmar",yr:2019,cat:"Hospitality",region:"International",imgs:["fortune"],
+ {id:"fortune",aor:"Goldman Design",t:"Fortune Resort",loc:"Ngapali Beach, Myanmar",yr:2019,cat:"Hospitality",region:"International",imgs:["fortune"],
   d:"A beach resort of 143 rooms with sea cottages over the water, bungalows, villas, sky pools with infinity edges and an offshore wave breaker that calms a swimming lagoon.",
   facts:[["Program","143 rooms, 43 sea cottages, 26 bungalows, 10 villas"]]},
- {id:"mandalay",t:"Mandalay Mayor's Residence",loc:"Myanmar",yr:2019,cat:"Residential",region:"International",imgs:["mandalay","mandalay-int"],
+ {id:"mandalay",aor:"Goldman Design",t:"Mandalay Mayor's Residence",loc:"Myanmar",yr:2019,cat:"Residential",region:"International",imgs:["mandalay","mandalay-int"],
   d:"A modern residence that brings in a traditional Myanmar door, two rooftop Zen spaces and a landscape planned to keep irrigation low.",
   facts:[["Program","Private residence"]]},
- {id:"szairport",t:"Airport New Town Emergency Center",loc:"Shenzhen, China",yr:2019,cat:"Institutional",region:"International",imgs:["szairport"],
+ {id:"szairport",aor:"Goldman Design",t:"Airport New Town Emergency Center",loc:"Shenzhen, China",yr:2019,cat:"Institutional",region:"International",imgs:["szairport"],
   d:"A combined fire, police, medical and command facility with exhibition space and community health services.",
   facts:[["Area","57,100 m²"],["Budget","CNY 410M"]]},
- {id:"ocean",t:"Xiaomeisha Ocean City",loc:"Shenzhen, China",yr:2017,cat:"Planning",region:"International",imgs:["oceancity"],
+ {id:"ocean",aor:"JR Design Group",t:"Xiaomeisha Ocean City",loc:"Shenzhen, China",yr:2017,cat:"Planning",region:"International",imgs:["oceancity"],
   d:"A competition master plan for a coastal district of hotels, marine park, convention centre and residences. The team was shortlisted against Zaha Hadid Architects and AECOM.",
   facts:[["Program","Mixed-use waterfront master plan"],["Result","Shortlisted"]]},
- {id:"bamboo",t:"Bamboo House",loc:"Sichuan Province, China",yr:2017,cat:"Residential",region:"International",imgs:["bamboo"],
+ {id:"bamboo",aor:"JR Design Group",t:"Bamboo House",loc:"Sichuan Province, China",yr:2017,cat:"Residential",region:"International",imgs:["bamboo"],
   d:"A house built from locally sourced bamboo. The roof form borrows from boat building and opens to wide views of Lugu Lake.",
   facts:[["Material","Local bamboo"]]},
- {id:"doha",t:"Doha Oasis",loc:"Doha, Qatar",yr:2018,cat:"Hospitality",region:"International",imgs:["doha"],
+ {id:"doha",aor:"Guangzhou Style Arts",t:"Doha Oasis",loc:"Doha, Qatar",yr:2018,cat:"Hospitality",region:"International",imgs:["doha"],
   d:"The amusement park portion of a large mixed-use development. Shop drawings, shipping and on-site assembly were coordinated from the contractor's side.",
   facts:[["Development","480,000 m² mixed-use"],["Project budget","US$1.3B"]]},
  {id:"maclehose",t:"MacLehose Trail Checkpoint",loc:"New Territories, Hong Kong",yr:2020,cat:"Landscape",region:"International",imgs:["maclehose"],
@@ -476,7 +474,7 @@ const P = [
  {id:"villas",t:"Three Attached Villas",loc:"Golf City, Cairo",yr:2014,cat:"Landscape",region:"International",imgs:["villas3"],
   d:"Landscape for three villas owned by three siblings. A shared roof garden brings the families together while private back gardens keep each household separate.",
   facts:[["Program","Residential landscape"]]},
- {id:"orabi",t:"Orabi Residence",loc:"Cairo, Egypt",yr:2014,cat:"Residential",region:"International",imgs:["orabi"],
+ {id:"orabi",aor:"MTA",t:"Orabi Residence",loc:"Cairo, Egypt",yr:2014,cat:"Residential",region:"International",imgs:["orabi"],
   d:"A classical eight-bedroom villa in Cairo, designed, rendered and since built.",
   facts:[["Area","1,150 m²"],["Program","8-bedroom residence"]]},
  {id:"hut",t:"Warming Hut",loc:"Winnipeg, MB",yr:2025,cat:"Landscape",region:"Canada",imgs:["warminghut"],
@@ -486,7 +484,7 @@ const P = [
 const SVC = [
  {t:"Architectural design",s:"Houses, multi-family, commercial and institutional buildings, from concept to construction documents.",
   items:["Feasibility and zoning studies","Concept and schematic design","Design development","Construction documents and outline specifications","Renovations, additions and tenant fit-ups"],
-  proof:"Multi-family buildings from 27 to 168 units in Winnipeg; a 1,350-person place of worship."},
+  proof:"Multi-family housing and a large place of worship in Winnipeg."},
  {t:"Landscape architecture",s:"Site plans, planting, hardscape and outdoor rooms that work in a Manitoba winter as well as summer.",
   items:["Site and landscape plans","Planting design and native species selection","Hardscape, grading intent and stormwater features","Courtyards, roof gardens and amenity spaces","Public installations"],
   proof:"Landscape construction for the Central Business District of Egypt's New Administrative Capital; landscape design for multi-family sites in Winnipeg."},
@@ -504,7 +502,7 @@ const SVC = [
   proof:"Landscape construction scheduling for a large capital city district."},
  {t:"Project management",s:"Structured management of scope, budget, schedule and the people involved.",
   items:["Scope and work plans","Budget and cost tracking","Stakeholder registers and reporting","Risk logs","Consultant and contractor coordination"],
-  proof:"Projects from C$4M to C$24M in Winnipeg."},
+  proof:"Multi-family and institutional projects in Winnipeg and abroad."},
  {t:"Community and site planning",s:"Arranging buildings, streets and open space so a whole site works, not just one building.",
   items:["Master plans and site layouts","Massing and density studies","Shadow studies","Public realm and streetscape","Phasing plans"],
   proof:"Seasons of Tuxedo lot studies; Xiaomeisha Ocean City master plan."},
@@ -559,7 +557,7 @@ function openP(id){
   const show=k=>{$("#pd-img").src=img(k);$("#pd-img").alt=p.t;document.querySelectorAll("#pd-thumbs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));};
   $("#pd-cat").textContent=`${p.cat}, ${p.yr}`; $("#pd-title").textContent=p.t; $("#pd-desc").textContent=p.d;
   $("#pd-dl").innerHTML=[["Location",p.loc],...p.facts].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
-  $("#pd-credit").textContent="Images shown with credit to the original architect of record.";
+  $("#pd-credit").textContent=p.aor?("Architect of record: "+p.aor+". Shown as prior work of our team."):"Images shown with credit to the original architect of record.";
   $("#pd-thumbs").innerHTML=p.imgs.length>1?p.imgs.map(k=>`<button data-k="${k}" aria-label="Show image"><img src="${img(k)}" alt=""></button>`).join(""):"";
   show(p.imgs[0]);
   $("#pd-thumbs").onclick=e=>{const b=e.target.closest("button");if(b)show(b.dataset.k);};
