@@ -557,7 +557,7 @@ function openP(id){
   const show=k=>{$("#pd-img").src=img(k);$("#pd-img").alt=p.t;document.querySelectorAll("#pd-thumbs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));};
   $("#pd-cat").textContent=`${p.cat}, ${p.yr}`; $("#pd-title").textContent=p.t; $("#pd-desc").textContent=p.d;
   $("#pd-dl").innerHTML=[["Location",p.loc],...p.facts].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
-  $("#pd-credit").textContent=p.aor?("Architect of record: "+p.aor+". Shown as prior work of our team."):"Images shown with credit to the original architect of record.";
+  $("#pd-credit").textContent=p.aor?("Architect of record: "+p.aor.replace(/\.$/,"")+". Shown as prior work of our team."):"Images shown with credit to the original architect of record.";
   $("#pd-thumbs").innerHTML=p.imgs.length>1?p.imgs.map(k=>`<button data-k="${k}" aria-label="Show image"><img src="${img(k)}" alt=""></button>`).join(""):"";
   show(p.imgs[0]);
   $("#pd-thumbs").onclick=e=>{const b=e.target.closest("button");if(b)show(b.dataset.k);};
