@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Opet Architecture &amp; Landscape</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a set of architectural drawing sheets. Each view is a "sheet" with a column grid (A, B, C / 1, 2, 3),
+   a title block, and sheet numbers. Images are full-bleed renders; text sits on the drafting grid. */
+:root{
+  /* Brand: Opet logo. Black ink, logo blue (sampled #0CA4D6), white. Deliberately single light theme so the logo reads as designed. */
+  --paper:#f6f7f7;
+  --paper-2:#e9ecee;
+  --ink:#0b0c0d;
+  --ink-2:#4a4f54;
+  --line:#cfd4d8;
+  --blue:#0ca4d6;       /* logo blue, for fills, rules and marks */
+  --blue-ink:#00739e;   /* darker logo blue for text on light paper */
+  --accent:var(--blue-ink);
+  --accent-ink:#ffffff;
+  --mark:var(--blue);
+  --night:#0b0c0d;
+  --f-display:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --gut:max(16px, env(safe-area-inset-left, 0px));
+  --gutr:max(16px, env(safe-area-inset-right, 0px));
+  --maxw:1240px;
+  color-scheme:light;
+}
+/* brand rule: solid logo blue */
+.checker{height:6px;background:var(--blue)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+a{color:inherit}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.08;letter-spacing:-.01em}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--gut);padding-right:var(--gutr)}
+
+/* ---------- header / title strip ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper)}
+.top .wrap{display:flex;align-items:center;gap:24px;padding-block:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.brand img{width:40px;height:40px}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:1.45rem;letter-spacing:.04em;line-height:1}
+.brand span{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+nav.views{display:flex;gap:4px;flex-wrap:wrap}
+nav.views button{font:500 .78rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid transparent;color:var(--ink);padding:9px 11px;cursor:pointer}
+nav.views button:hover{border-color:var(--line)}
+nav.views button[aria-current="page"]{background:var(--ink);color:#fff;box-shadow:inset 0 -3px 0 var(--blue)}
+.aitoggle{display:flex;align-items:center;gap:0;border:1px dashed var(--blue)}
+.aitoggle .mono{font-size:.62rem;padding:0 8px;color:var(--ink-2)}
+.aitoggle button{font:500 .7rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border:0;background:transparent;color:var(--ink);padding:8px 9px;cursor:pointer}
+.aitoggle button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.card .ph{position:relative}
+.aib{position:absolute;left:8px;top:8px;z-index:2;font:500 .62rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:rgba(11,12,13,.78);color:#fff;padding:5px 7px;border-left:3px solid var(--blue)}
+.pd-img{position:relative}
+.draft-tag{font:500 .68rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;border:1px dashed var(--mark);color:var(--ink);padding:6px 8px}
+
+/* ---------- sheets (views) ---------- */
+.sheet{padding-bottom:72px}
+.sheet-head{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;padding-block:56px 28px;border-bottom:1px solid var(--line)}
+.sheet-head h1{font-size:clamp(2.1rem,5.2vw,3.9rem);font-weight:700;max-width:18ch}
+.sheet-no{font-family:var(--f-mono);text-align:right;color:var(--ink-2);font-size:.75rem;letter-spacing:.08em;line-height:1.5}
+.sheet-no b{display:block;font-family:var(--f-display);font-size:2.2rem;color:var(--ink);letter-spacing:0}
+.lede{font-size:1.15rem;max-width:62ch;color:var(--ink-2)}
+
+/* grid bubbles, the one recurring ornament: they label real columns of content */
+.bubble{display:inline-grid;place-items:center;width:30px;height:30px;border:2px solid var(--blue);background:var(--ink);color:#fff;border-radius:50%;font:500 .78rem/1 var(--f-mono);flex:none}
+
+/* ---------- home ---------- */
+.hero{position:relative;border-bottom:1px solid var(--ink)}
+.hero figure{margin:0;position:relative;aspect-ratio:16/8;max-height:640px;width:100%;overflow:hidden;background:var(--paper-2)}
+.hero img{width:100%;height:100%;object-fit:cover}
+.titleblock{border-top:4px solid var(--blue)!important;position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:16px;background:var(--paper);border:1px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;max-width:min(560px,calc(100% - 32px));font-size:.8rem}
+.titleblock>div{padding:10px 12px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.titleblock>div:nth-child(2n){border-right:0}
+.titleblock>div.full{grid-column:1/-1;border-right:0}
+.titleblock>div:last-child,.titleblock>div:nth-last-child(2):not(.full){border-bottom:0}
+.titleblock .mono{color:var(--ink-2);font-size:.62rem;display:block;margin-bottom:2px}
+.titleblock .full strong{font-family:var(--f-display);font-size:1.05rem}
+.hero-copy{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px;padding-block:56px}
+.hero-copy h1{font-size:clamp(2.2rem,5.6vw,4.4rem);font-weight:700}
+.hero-copy h1 em{font-style:normal;color:var(--accent)}
+.hero-copy .side{display:flex;flex-direction:column;gap:20px;justify-content:end}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:500 .8rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:14px 18px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.facts>div{padding:22px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.facts>div:last-child{border-right:0}
+.facts b{font-size:1.35rem!important;color:var(--ink);border-left:4px solid var(--blue);padding-left:10px;font-family:var(--f-display);font-size:2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.facts span{font-size:.88rem;color:var(--ink-2)}
+
+.sec{padding-block:64px 0}
+.sec-h{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.sec-h h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:650}
+.sec-h .rule{flex:1;height:1px;background:var(--line)}
+.sec-h a,.sec-h button.link{font:500 .75rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:none;border:0;color:var(--accent);cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:4px}
+
+/* featured project strip */
+.feature{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
+.card{display:flex;flex-direction:column;gap:10px;cursor:pointer;background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit}
+.card .ph{overflow:hidden;background:var(--paper-2);aspect-ratio:3/2}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.card:hover .ph img{transform:scale(1.03)}
+.card h3{font-size:1.15rem;font-weight:650}
+.card .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--ink-2);font-size:.85rem}
+.card .credit{font-size:.7rem;color:var(--ink-2);font-style:italic}
+.f-a{grid-column:span 7}.f-b{grid-column:span 5}.f-c{grid-column:span 4}.f-d{grid-column:span 4}.f-e{grid-column:span 4}
+.f-a .ph{aspect-ratio:16/10}.f-b .ph{aspect-ratio:4/3.33}
+
+/* service index on home */
+.svc-index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink)}
+.svc-index>div{padding:20px 18px 22px 0;border-bottom:1px solid var(--line);display:flex;gap:14px}
+.svc-index h3{font-size:1.02rem;font-weight:650;margin-bottom:4px}
+.svc-index p{font-size:.9rem;color:var(--ink-2)}
+
+/* ---------- projects ---------- */
+.filters{display:flex;gap:6px;flex-wrap:wrap;padding-block:24px}
+.filters button{font:500 .74rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 24px}
+
+.register-wrap{overflow-x:auto;border-top:1px solid var(--ink)}
+table.register{width:100%;border-collapse:collapse;font-size:.9rem;min-width:640px}
+table.register th{font:500 .68rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--ink-2);padding:12px 10px;border-bottom:1px solid var(--ink)}
+table.register td{padding:13px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.register td:first-child{font-family:var(--f-mono);font-size:.8rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:500 .66rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);padding:5px 6px;margin:0 4px 4px 0;white-space:nowrap}
+
+/* project detail overlay */
+dialog.pd{border:1px solid var(--ink);padding:0;max-width:min(980px,calc(100vw - 32px));width:100%;background:var(--paper);color:var(--ink);max-height:calc(100vh - 32px)}
+dialog.pd::backdrop{background:rgba(10,14,13,.6)}
+.pd-img{aspect-ratio:16/9;background:var(--paper-2)}
+.pd-img img{width:100%;height:100%;object-fit:cover}
+.pd-body{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;padding:24px}
+.pd-body h2{font-size:1.8rem;font-weight:700;margin-bottom:10px}
+.pd-body dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:.88rem;align-content:start}
+.pd-body dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding-top:3px}
+.pd-body dd{margin:0}
+.pd-credit{grid-column:1/-1;font-size:.72rem;font-style:italic;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
+.pd-close{position:absolute;right:10px;top:10px;font:500 .74rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--paper);border:1px solid var(--ink);color:var(--ink);padding:9px 11px;cursor:pointer}
+.pd-thumbs{display:flex;gap:8px;padding:0 24px 24px;flex-wrap:wrap}
+.pd-thumbs button{width:96px;aspect-ratio:3/2;padding:0;border:1px solid var(--line);background:var(--paper-2);cursor:pointer;overflow:hidden}
+.pd-thumbs button[aria-pressed="true"]{border:2px solid var(--accent)}
+.pd-thumbs img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- services ---------- */
+.svc{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,1fr);gap:24px;padding-block:30px;border-bottom:1px solid var(--line)}
+.svc:first-of-type{border-top:1px solid var(--ink)}
+.svc .num{font-family:var(--f-display);font-weight:800;font-size:1.6rem;color:var(--blue);line-height:1}
+.svc h3{font-size:1.45rem;font-weight:650;margin-bottom:10px}
+.svc p{color:var(--ink-2);max-width:56ch}
+.svc ol{margin:0;padding-left:1.3em;font-size:.93rem;display:flex;flex-direction:column;gap:5px}
+.svc .proof{margin-top:12px;font-size:.82rem;color:var(--ink-2)}
+.svc .proof b{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:500;margin-right:6px}
+.process{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--ink);border-top:4px solid var(--blue);margin-top:56px;background:var(--paper)}
+.process>div{padding:18px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.process>div:last-child{border-right:0}
+.process h3{font-size:1rem;font-weight:650}
+.process p{font-size:.85rem;color:var(--ink-2)}
+.note{margin-top:28px;padding:16px 18px;border-left:4px solid var(--blue);background:var(--paper-2);font-size:.92rem;max-width:80ch}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:56px;padding-block:48px}
+.portrait{position:relative}
+.portrait img{width:100%;max-width:240px;aspect-ratio:1;object-fit:cover;border-radius:50%;box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--blue)}
+.portrait figcaption{margin-top:10px;font-size:.78rem;color:var(--ink-2)}
+.stamp{margin-top:26px;border:1.5px solid var(--ink);border-top:4px solid var(--blue);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.stamp b{font-family:var(--f-display);font-size:1.15rem}
+.about-body{display:flex;flex-direction:column;gap:20px;max-width:66ch}
+.about-body h2{font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:700}
+.about-body p{font-size:1.04rem}
+.creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--ink);margin-top:8px}
+.creds>div{padding:14px 14px 14px 0;border-bottom:1px solid var(--line)}
+.creds b{display:block;font-family:var(--f-display);font-size:1.05rem}
+.creds span{font-size:.86rem;color:var(--ink-2)}
+.timeline{display:flex;flex-direction:column;border-top:1px solid var(--ink)}
+.timeline>div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:18px;padding:14px 0;border-bottom:1px solid var(--line)}
+.timeline .yr{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.timeline b{font-weight:600}
+.timeline span{display:block;font-size:.9rem;color:var(--ink-2)}
+
+/* ---------- team ---------- */
+.team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:36px}
+.member{border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:10px}
+.member.lead{border-color:var(--ink)}
+.member .ph{aspect-ratio:1;background:var(--paper-2);display:grid;place-items:center;font-family:var(--f-display);font-size:2.4rem;color:var(--ink-2);overflow:hidden}
+.member .ph img{width:100%;height:100%;object-fit:cover}
+.member .ph.round{background:transparent}
+.member .ph.round img{width:72%;height:72%;border-radius:50%}
+.member.lead{border-top:4px solid var(--blue)}
+.member h3{font-size:1.2rem;font-weight:650}
+.member .role{font-size:.88rem;color:var(--ink-2)}
+.pending{font:500 .66rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border:1px dashed var(--mark);padding:6px 8px;align-self:flex-start}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:56px;padding-top:40px}
+.contact dl{margin:0;display:grid;grid-template-columns:110px 1fr;gap:14px 16px;border-top:1px solid var(--ink);padding-top:18px}
+.contact dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding-top:4px}
+.contact dd{margin:0;font-size:1.05rem;user-select:all}
+form{display:flex;flex-direction:column;gap:14px}
+label{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);display:flex;flex-direction:column;gap:6px}
+input,select,textarea{font:400 1rem var(--f-body);padding:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:0;text-transform:none;letter-spacing:0}
+input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-msg{font-size:.9rem;color:var(--accent)}
+
+/* ---------- footer ---------- */
+footer{margin-top:24px;background:var(--night);color:#d9dde0}
+footer .brandfoot{display:flex;align-items:center;gap:14px;color:#fff}
+footer .brandfoot img{width:56px;height:56px}
+footer .brandfoot b{font-family:var(--f-display);font-weight:800;font-size:1.6rem;letter-spacing:.04em;color:#fff;margin:0;text-transform:none}
+footer .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding-block:32px 44px;font-size:.84rem;color:#b9c0c5}
+footer b{display:block;color:var(--blue);font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;font-weight:500}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .hero-copy,.about,.contact{grid-template-columns:1fr;gap:28px}
+  .pgrid,.team{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .svc-index{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .process{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .process>div{border-bottom:1px solid var(--line)}
+  .f-a,.f-b{grid-column:span 12}.f-c,.f-d,.f-e{grid-column:span 6}
+  .svc{grid-template-columns:56px minmax(0,1fr)}
+  .svc>div:last-child{grid-column:2}
+  .about .portrait{max-width:320px}
+  footer .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts>div:nth-child(2){border-right:0}
+  .facts>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .pgrid,.team,.svc-index,.creds,.row2{grid-template-columns:1fr}
+  .f-c,.f-d,.f-e{grid-column:span 12}
+  .process{grid-template-columns:1fr}
+  .hero figure{aspect-ratio:4/5}
+  .titleblock{position:static;margin:12px 16px 0;max-width:none}
+  .pd-body{grid-template-columns:1fr}
+  .timeline>div{grid-template-columns:1fr;gap:2px}
+  .sheet-head{grid-template-columns:1fr}
+  .sheet-no{text-align:left}
+  footer .wrap{grid-template-columns:1fr}
+  nav.views button{padding:8px 8px;font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+</head><body style="margin:0">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" data-go="home"><img src="img/opet-emblem.png" alt=""><b>OPET</b><span>Architecture &amp; Landscape</span></a>
+    <nav class="views" aria-label="Pages">
+      <button data-go="home">Home</button>
+      <button data-go="projects">Projects</button>
+      <button data-go="services">Services</button>
+      <button data-go="contact">Contact</button>
+    </nav>
+  </div>
+  <div class="checker" aria-hidden="true"></div>
+</header>
+
+<main>
+<!-- ================= HOME ================= -->
+<section class="sheet" id="v-home" data-view="home">
+  <div class="hero">
+    <figure>
+      <img id="hero-img" data-k="templeton2" src="img/templeton2-ai.jpg" alt="Rendering of a six-storey mixed-use residential building with brick-red balcony bays and street-level retail">
+    </figure>
+    <div class="titleblock" aria-label="Featured project">
+      <div class="full"><span class="mono">Featured project</span><strong>1350 Templeton Avenue</strong></div>
+      <div><span class="mono">Location</span>Winnipeg, MB</div>
+      <div><span class="mono">Program</span>100 condo units + CRU</div>
+      <div><span class="mono">Gross floor area</span>142,600 sq. ft.</div>
+      <div><span class="mono">Budget</span>C$10M</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1>Buildings and landscapes, <em>from first sketch to occupancy.</em></h1>
+      <div class="side">
+        <p class="lede">Opet is a Winnipeg architecture and landscape practice. We design, review codes, take projects through the City permit process and stay with them on site until the occupancy letter is signed.</p>
+        <div class="btns">
+          <button class="btn" data-go="contact">Start a project</button>
+          <button class="btn ghost" data-go="projects">See the work</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="facts">
+      <div><b>Architecture</b><span>New buildings, additions, renovations and tenant fit-ups</span></div>
+      <div><b>Landscape</b><span>Site plans, planting, courtyards and public spaces</span></div>
+      <div><b>Permits</b><span>Code review and City of Winnipeg applications through to occupancy</span></div>
+      <div><b>Site</b><span>Contract administration and construction phase support</span></div>
+    </div>
+
+
+    <div class="sec">
+      <div class="sec-h"><span class="bubble">A</span><h2>Selected work</h2><span class="rule"></span><button class="link" data-go="projects">All projects</button></div>
+      <div class="feature" id="featured"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="bubble">B</span><h2>What we do</h2><span class="rule"></span><button class="link" data-go="services">All services</button></div>
+      <div class="svc-index" id="svc-index"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><span class="bubble">C</span><h2>How a project runs</h2><span class="rule"></span></div>
+      <div class="process" style="margin-top:0" aria-label="How a project runs">
+        <div><span class="mono">Stage 1</span><h3>Feasibility</h3><p>Zoning check, site constraints, budget and schedule.</p></div>
+        <div><span class="mono">Stage 2</span><h3>Design</h3><p>Concept to design development, with renderings for decisions.</p></div>
+        <div><span class="mono">Stage 3</span><h3>Code and permits</h3><p>Code analysis, design summary, City submission and responses.</p></div>
+        <div><span class="mono">Stage 4</span><h3>Construction documents</h3><p>Coordinated drawings and specifications, tender support.</p></div>
+        <div><span class="mono">Stage 5</span><h3>Construction</h3><p>Site reviews, shop drawings, RFIs and the occupancy letter.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="sheet" id="v-projects" data-view="projects" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <h1>Projects</h1>
+      <div class="sheet-no">Sheet<b>A-101</b>Selected work, 2013 to 2026</div>
+    </div>
+    <p class="lede" style="padding-top:24px">Work from Winnipeg, Cairo, Shenzhen, Doha and beyond. All images are shown with credit to the original architect of record.</p>
+    <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
+    <div class="pgrid" id="pgrid"></div>
+
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="sheet" id="v-services" data-view="services" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <h1>Services</h1>
+      <div class="sheet-no">Sheet<b>A-201</b>Scope of services</div>
+    </div>
+    <p class="lede" style="padding-block:24px 36px">One point of contact from feasibility through occupancy. Opet leads the architecture and landscape work and coordinates structural, mechanical, electrical and civil engineers through established partner firms.</p>
+    <div id="svc-full"></div>
+
+    <div class="process" aria-label="How a project runs">
+      <div><span class="mono">Stage 1</span><h3>Feasibility</h3><p>Zoning check, site constraints, budget and schedule.</p></div>
+      <div><span class="mono">Stage 2</span><h3>Design</h3><p>Concept to design development, with renderings for decisions.</p></div>
+      <div><span class="mono">Stage 3</span><h3>Code and permits</h3><p>Code analysis, design summary, City submission and responses.</p></div>
+      <div><span class="mono">Stage 4</span><h3>Construction documents</h3><p>Coordinated drawings and specifications, tender support.</p></div>
+      <div><span class="mono">Stage 5</span><h3>Construction</h3><p>Site reviews, shop drawings, RFIs and the occupancy letter.</p></div>
+    </div>
+    <p class="note">Engineering disciplines are delivered by licensed partner firms under their own seals. Opet coordinates them so the client deals with one team.</p>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="sheet" id="v-contact" data-view="contact" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <h1>Tell us about your project</h1>
+      <div class="sheet-no">Sheet<b>A-501</b>Contact</div>
+    </div>
+    <div class="contact">
+      <div>
+        <p class="lede" style="margin-bottom:28px">A short call is usually enough to tell you what approvals the project needs, what it may cost to design and how long the City process takes.</p>
+        <dl>
+          <dt>Email</dt><dd>aabouseif@opetarch.com</dd>
+          <dt>Phone</dt><dd>204-558-8233</dd>
+          <dt>Based in</dt><dd>Winnipeg, Manitoba</dd>
+          <dt>Serving</dt><dd>Manitoba and remote design work internationally</dd>
+          <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/company/opet-architecture-landscape/" target="_blank" rel="noopener">Opet Architecture &amp; Landscape</a></dd>
+        </dl>
+      </div>
+      <form id="cform" novalidate>
+        <div class="row2">
+          <label for="f-name">Name<input id="f-name" name="name" autocomplete="name" required></label>
+          <label for="f-email">Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
+        </div>
+        <div class="row2">
+          <label for="f-type">Project type
+            <select id="f-type" name="type">
+              <option>New building</option><option>Renovation or tenant fit-up</option><option>Code review or permit help</option><option>Landscape or site design</option><option>Construction phase services</option><option>Other</option>
+            </select></label>
+          <label for="f-loc">Project address or area<input id="f-loc" name="location"></label>
+        </div>
+        <label for="f-msg">What are you planning?<textarea id="f-msg" name="message" rows="6"></textarea></label>
+        <div class="btns"><button class="btn" type="submit">Send enquiry</button></div>
+        <p class="form-msg" id="form-msg" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="checker" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="brandfoot"><img src="img/opet-emblem.png" alt=""><div><b>OPET</b>Architecture &amp; Landscape<br>Winnipeg, Manitoba</div></div>
+    <div><b>Services</b>Architecture, landscape, code review, permits, contract administration</div>
+    <div><b>Contact</b>aabouseif@opetarch.com<br>204-558-8233</div>
+    <div><b>Note</b>Project images are shown with credit to the original architect of record.</div>
+  </div>
+</footer>
+
+<dialog class="pd" id="pd" aria-labelledby="pd-title">
+  <button class="pd-close" id="pd-close">Close</button>
+  <div class="pd-img"><img id="pd-img" alt=""></div>
+  <div class="pd-body">
+    <div><span class="mono" id="pd-cat"></span><h2 id="pd-title"></h2><p id="pd-desc"></p></div>
+    <dl id="pd-dl"></dl>
+    <p class="pd-credit" id="pd-credit"></p>
+  </div>
+  <div class="pd-thumbs" id="pd-thumbs"></div>
+</dialog>
+
+<script>
+const P = [
+ {id:"templeton",t:"1350 Templeton Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["templeton2","templeton1"],
+  d:"A six-storey residential building with commercial units at grade. Brick-red balcony bays break up a long frontage and give each unit a visible outdoor room.",
+  facts:[["Program","100 condo units + CRU"],["Area","142,600 sq. ft. GFA"],["Budget","C$10M"]]},
+ {id:"river",t:"586 to 588 River Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["river1","river2"],
+  d:"Infill residential building. A glazed curved corner marks the entrance and turns the building toward the street.",
+  facts:[["Program","Multi-family residential"]]},
+ {id:"sikh",t:"Sikh Place of Worship",loc:"2762 King Edward St, Winnipeg",yr:2022,cat:"Institutional",region:"Canada",imgs:["sikh"],
+  d:"A gurdwara with shrine, prayer hall, dining hall and residential suites. GFRC domes and decorative panels carry the building's identity on a noncombustible frame.",
+  facts:[["Occupancy","Assembly (A-2), with C suites"],["Occupant load","1,350"],["Construction","Noncombustible"]]},
+ {id:"court",t:"1245 and 1255 Court Avenue",loc:"Winnipeg, MB",yr:2023,cat:"Multi-family",region:"Canada",imgs:["court"],
+  d:"Residential concept with a landscaped frontage, explored in several facade options.",
+  facts:[["Program","Residential"]]},
+ {id:"portage",t:"2140 Portage Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["portage1","portage2"],
+  d:"A mid-rise apartment building on Portage Avenue, carried through to the 99% owner review set.",
+  facts:[["Program","Multi-family residential"]]},
+ {id:"wardlaw",t:"349 Wardlaw Avenue",loc:"Winnipeg, MB",yr:2022,cat:"Multi-family",region:"Canada",imgs:["wardlaw1","wardlaw3"],
+  d:"Four-storey infill apartment building in a mature neighbourhood, issued for construction in 2022.",
+  facts:[["Program","Multi-family residential"]]},
+ {id:"seasons",t:"Seasons of Tuxedo, Lots 20 to 25",loc:"Winnipeg, MB",yr:2022,cat:"Planning",region:"Canada",imgs:["seasons2","seasons1"],
+  d:"Site layout and massing options for several multi-family lots in a large mixed-use development.",
+  facts:[["Program","Multi-family, site planning"]]},
+ {id:"kings",t:"The King's School",loc:"Winnipeg, MB",yr:2022,cat:"Institutional",region:"Canada",imgs:["kingsschool"],
+  d:"Exterior rendering of a new school building.",
+  facts:[["Program","Education"]]},
+ {id:"fortune",t:"Fortune Resort",loc:"Ngapali Beach, Myanmar",yr:2019,cat:"Hospitality",region:"International",imgs:["fortune"],
+  d:"A beach resort of 143 rooms with sea cottages over the water, bungalows, villas, sky pools with infinity edges and an offshore wave breaker that calms a swimming lagoon.",
+  facts:[["Program","143 rooms, 43 sea cottages, 26 bungalows, 10 villas"]]},
+ {id:"mandalay",t:"Mandalay Mayor's Residence",loc:"Myanmar",yr:2019,cat:"Residential",region:"International",imgs:["mandalay","mandalay-int"],
+  d:"A modern residence that brings in a traditional Myanmar door, two rooftop Zen spaces and a landscape planned to keep irrigation low.",
+  facts:[["Program","Private residence"]]},
+ {id:"szairport",t:"Airport New Town Emergency Center",loc:"Shenzhen, China",yr:2019,cat:"Institutional",region:"International",imgs:["szairport"],
+  d:"A combined fire, police, medical and command facility with exhibition space and community health services.",
+  facts:[["Area","57,100 m²"],["Budget","CNY 410M"]]},
+ {id:"ocean",t:"Xiaomeisha Ocean City",loc:"Shenzhen, China",yr:2017,cat:"Planning",region:"International",imgs:["oceancity"],
+  d:"A competition master plan for a coastal district of hotels, marine park, convention centre and residences. The team was shortlisted against Zaha Hadid Architects and AECOM.",
+  facts:[["Program","Mixed-use waterfront master plan"],["Result","Shortlisted"]]},
+ {id:"bamboo",t:"Bamboo House",loc:"Sichuan Province, China",yr:2017,cat:"Residential",region:"International",imgs:["bamboo"],
+  d:"A house built from locally sourced bamboo. The roof form borrows from boat building and opens to wide views of Lugu Lake.",
+  facts:[["Material","Local bamboo"]]},
+ {id:"doha",t:"Doha Oasis",loc:"Doha, Qatar",yr:2018,cat:"Hospitality",region:"International",imgs:["doha"],
+  d:"The amusement park portion of a large mixed-use development. Shop drawings, shipping and on-site assembly were coordinated from the contractor's side.",
+  facts:[["Development","480,000 m² mixed-use"],["Project budget","US$1.3B"]]},
+ {id:"maclehose",t:"MacLehose Trail Checkpoint",loc:"New Territories, Hong Kong",yr:2020,cat:"Landscape",region:"International",imgs:["maclehose"],
+  d:"An unmanned emergency shelter for hikers on a 100 km trail, with first aid supplies, fresh water and a form braced against typhoon winds.",
+  facts:[["Program","Emergency shelter"],["Status","Concept"]]},
+ {id:"villas",t:"Three Attached Villas",loc:"Golf City, Cairo",yr:2014,cat:"Landscape",region:"International",imgs:["villas3"],
+  d:"Landscape for three villas owned by three siblings. A shared roof garden brings the families together while private back gardens keep each household separate.",
+  facts:[["Program","Residential landscape"]]},
+ {id:"orabi",t:"Orabi Residence",loc:"Cairo, Egypt",yr:2014,cat:"Residential",region:"International",imgs:["orabi"],
+  d:"A classical eight-bedroom villa in Cairo, designed, rendered and since built.",
+  facts:[["Area","1,150 m²"],["Program","8-bedroom residence"]]},
+ {id:"hut",t:"Warming Hut",loc:"Winnipeg, MB",yr:2025,cat:"Landscape",region:"Canada",imgs:["warminghut"],
+  d:"A competition entry for Winnipeg's Warming Huts program: a timber shelter set in the winter landscape.",
+  facts:[["Program","Public installation"],["Status","Competition entry"]]}
+];
+const SVC = [
+ {t:"Architectural design",s:"Houses, multi-family, commercial and institutional buildings, from concept to construction documents.",
+  items:["Feasibility and zoning studies","Concept and schematic design","Design development","Construction documents and outline specifications","Renovations, additions and tenant fit-ups"],
+  proof:"Multi-family buildings from 27 to 168 units in Winnipeg; a 1,350-person place of worship."},
+ {t:"Landscape architecture",s:"Site plans, planting, hardscape and outdoor rooms that work in a Manitoba winter as well as summer.",
+  items:["Site and landscape plans","Planting design and native species selection","Hardscape, grading intent and stormwater features","Courtyards, roof gardens and amenity spaces","Public installations"],
+  proof:"Landscape construction for the Central Business District of Egypt's New Administrative Capital; landscape design for multi-family sites in Winnipeg."},
+ {t:"Building code review",s:"Code analysis early, so the design is right before the City sees it.",
+  items:["Manitoba Building Code and NBC analysis, Part 3 and Part 9","Occupancy, fire separation and exiting reviews","Life safety reviews of existing buildings","Energy code compliance reviews","Change of use assessments"],
+  proof:"Code reviews for assembly, residential and commercial buildings in Winnipeg."},
+ {t:"Permits and City coordination",s:"We prepare and submit the package and answer the City's comments until the permit is issued.",
+  items:["Building permit applications","Architectural design summaries and professional designer certificates","Development and variance applications","Plan approval and pre-application meetings","Occupancy letters"],
+  proof:"Permit, variance and plan approval files with the City of Winnipeg."},
+ {t:"Contract administration",s:"Being on site protects the design and the client's budget.",
+  items:["Site reviews and field reports","Shop drawing review","Requests for information and clarifications","Change directives and change orders","Payment certification and deficiency lists"],
+  proof:"Contract administration on Winnipeg multi-family projects; subcontractor and shop drawing review on large international sites."},
+ {t:"Construction management support",s:"Acting as the owner's representative so the builder, consultants and schedule stay aligned.",
+  items:["Tender documents and bid review","Construction schedules and phasing","Budget tracking","Coordination meetings and minutes","Trade and supplier coordination"],
+  proof:"Landscape construction scheduling for a large capital city district."},
+ {t:"Project management",s:"Structured management of scope, budget, schedule and the people involved.",
+  items:["Scope and work plans","Budget and cost tracking","Stakeholder registers and reporting","Risk logs","Consultant and contractor coordination"],
+  proof:"Projects from C$4M to C$24M in Winnipeg."},
+ {t:"Community and site planning",s:"Arranging buildings, streets and open space so a whole site works, not just one building.",
+  items:["Master plans and site layouts","Massing and density studies","Shadow studies","Public realm and streetscape","Phasing plans"],
+  proof:"Seasons of Tuxedo lot studies; Xiaomeisha Ocean City master plan."},
+ {t:"Visualization",s:"Renderings and animations that let clients, lenders and neighbours see the project before it is built.",
+  items:["Photorealistic exterior and interior renderings","Aerial views","Walkthrough animations","Marketing images"],
+  proof:"Rendering work for projects in Canada, China and Myanmar."}
+];
+
+const $=s=>document.querySelector(s);
+const AI=new Set(["templeton2","templeton1","river1","river2","court","kingsschool","bamboo","sikh","orabi","villas3","mandalay","szairport","maclehose","warminghut"]);
+const useAI=true;
+const img=k=>(useAI&&AI.has(k))?`img/${k}-ai.jpg`:`img/${k}.jpg`;
+const aiBadge=k=>"";
+function card(p,cls=""){
+  return `<button class="card ${cls}" data-p="${p.id}">
+    <div class="ph">${aiBadge(p.imgs[0])}<img src="${img(p.imgs[0])}" alt="${p.t}"></div>
+    <div class="meta"><span class="mono">${p.cat}</span><span>${p.loc}</span><span>${p.yr}</span></div>
+    <h3>${p.t}</h3>
+  </button>`;
+}
+// featured
+const feat=[["templeton","f-a"],["fortune","f-b"],["sikh","f-c"],["ocean","f-d"],["villas","f-e"]];
+$("#featured").innerHTML=feat.map(([id,c])=>card(P.find(p=>p.id===id),c)).join("");
+// service index
+$("#svc-index").innerHTML=SVC.slice(0,6).map((s,i)=>`<div><span class="bubble">${i+1}</span><div><h3>${s.t}</h3><p>${s.s}</p></div></div>`).join("");
+// projects grid + filters
+const cats=["All","Canada","International","Multi-family","Institutional","Hospitality","Residential","Landscape","Planning"];
+let cur="All";
+function drawGrid(){
+  const list=P.filter(p=>cur==="All"||p.region===cur||p.cat===cur);
+  $("#pgrid").innerHTML=list.map(p=>card(p)).join("");
+}
+$("#filters").innerHTML=cats.map(c=>`<button data-f="${c}" aria-pressed="${c===cur}">${c}</button>`).join("");
+$("#filters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;cur=b.dataset.f;
+  document.querySelectorAll("#filters button").forEach(x=>x.setAttribute("aria-pressed",x===b));drawGrid();});
+drawGrid();
+function applyAI(){
+  const h=document.getElementById("hero-img"); h.src=img(h.dataset.k);
+  $("#featured").innerHTML=feat.map(([id,c])=>card(P.find(p=>p.id===id),c)).join("");
+  drawGrid();
+  if(dlg.open&&window.__curP)openP(window.__curP);
+}
+// services full
+$("#svc-full").innerHTML=SVC.map((s,i)=>`<div class="svc"><span class="num">${String(i+1).padStart(2,"0")}</span>
+  <div><h3>${s.t}</h3><p>${s.s}</p><p class="proof"><b>Track record</b>${s.proof}</p></div>
+  <div><ol>${s.items.map(x=>`<li>${x}</li>`).join("")}</ol></div></div>`).join("");
+
+// project dialog
+const dlg=$("#pd");
+function openP(id){
+  const p=P.find(x=>x.id===id); if(!p)return; window.__curP=id;
+  const show=k=>{$("#pd-img").src=img(k);$("#pd-img").alt=p.t;document.querySelectorAll("#pd-thumbs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));};
+  $("#pd-cat").textContent=`${p.cat}, ${p.yr}`; $("#pd-title").textContent=p.t; $("#pd-desc").textContent=p.d;
+  $("#pd-dl").innerHTML=[["Location",p.loc],...p.facts].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  $("#pd-credit").textContent="Images shown with credit to the original architect of record.";
+  $("#pd-thumbs").innerHTML=p.imgs.length>1?p.imgs.map(k=>`<button data-k="${k}" aria-label="Show image"><img src="${img(k)}" alt=""></button>`).join(""):"";
+  show(p.imgs[0]);
+  $("#pd-thumbs").onclick=e=>{const b=e.target.closest("button");if(b)show(b.dataset.k);};
+  if(dlg.showModal&&!dlg.open)dlg.showModal();
+}
+document.addEventListener("click",e=>{const c=e.target.closest("[data-p]");if(c)openP(c.dataset.p);});
+$("#pd-close").onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+
+// views
+const VIEWS=["home","projects","services","contact"];
+function go(v,push=true){
+  if(!VIEWS.includes(v))v="home";
+  document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
+  document.querySelectorAll("nav.views button").forEach(b=>b.setAttribute("aria-current",b.dataset.go===v?"page":"false"));
+  if(push){try{history.replaceState(null,"","#"+v)}catch(e){}}
+  window.scrollTo({top:0});
+}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){e.preventDefault();go(g.dataset.go);}});
+go((location.hash||"#home").slice(1),false);
+applyAI();
+
+// form: opens the visitor's email app with the enquiry filled in
+$("#cform").addEventListener("submit",e=>{e.preventDefault();
+  const n=$("#f-name").value.trim(),m=$("#f-email").value.trim();
+  if(!n||!m){$("#form-msg").textContent="Please add your name and email so we can reply.";return;}
+  const body=`Name: ${n}\nEmail: ${m}\nProject type: ${$("#f-type").value}\nAddress or area: ${$("#f-loc").value}\n\n${$("#f-msg").value}`;
+  location.href="mailto:aabouseif@opetarch.com?subject="+encodeURIComponent("Project enquiry: "+$("#f-type").value)+"&body="+encodeURIComponent(body);
+  $("#form-msg").textContent="Your email app should open with the enquiry ready to send. If it does not, email aabouseif@opetarch.com or call 204-558-8233.";});
+</script>
+
+</body></html>
